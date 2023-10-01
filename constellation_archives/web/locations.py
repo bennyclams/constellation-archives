@@ -2,6 +2,7 @@ from flask import Blueprint, render_template, request, redirect, url_for, flash
 from flask_login import current_user
 from constellation_archives.models.system import System
 from constellation_archives.models.planet import Planet
+from constellation_archives.web.utils import upload_file_to_s3
 
 app = Blueprint("locations", __name__)
 
@@ -17,7 +18,8 @@ def systems():
 def system(system):
     data = {
         "system": System(name=system),
-        "planets": Planet.by_system(system),
+        # "planets": Planet.by_system(system),
+        "planets": [],
         "page": "systems"
     }
     return render_template("locations/system.html", **data)
@@ -36,6 +38,12 @@ def new_system():
     if request.method == "GET":
         return render_template("locations/new_system.html", page="new_system")
     elif request.method == "POST":
+        banner = request.files["banner"]
+        if banner.filename != "":
+            banner = upload_file_to_s3(banner)
+        else:
+            banner = banner.filename
+
         data = {
             "name": request.form["name"],
             "level": request.form["level"],
@@ -47,19 +55,20 @@ def new_system():
             "magnitude": request.form["magnitude"],
             "planet_count": request.form["planets"],
             "moon_count": request.form["moons"],
-            "faction": request.form["controlling_faction"],
+            "faction": request.form["faction"],
             "description": request.form["description"],
-            "submitter": current_user.username
+            "banner": banner,
+            "submitter": current_user['username']
         }
         try:
             system = System(name=data["name"])
-            flash("System already exists.")
-            return redirect(url_for("locations.system", system=system.name))
+            flash("System already exists.", "warning")
+            return redirect(url_for("locations.system", system=system['name']))
         except:
             pass
         system = System.new(**data)
-        flash("System created successfully.")
-        return redirect(url_for("locations.system", system=system.name))
+        flash("System created successfully.", "success")
+        return redirect(url_for("locations.system", system=system['name']))
     
 @app.route("/new/planet/", methods=["GET", "POST"])
 def new_planet():
@@ -85,10 +94,10 @@ def new_planet():
         }
         try:
             planet = Planet(name=data["name"], system=data["system"])
-            flash("Planet already exists.")
+            flash("Planet already exists.", "warning")
             return redirect(url_for("locations.planet", system=planet.system, planet=planet.name))
         except:
             pass
         planet = Planet.new(**data)
-        flash("Planet created successfully.")
+        flash("Planet created successfully.", "success")
         return redirect(url_for("locations.planet", system=planet.system, planet=planet.name))

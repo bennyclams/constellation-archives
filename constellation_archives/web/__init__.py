@@ -24,9 +24,13 @@ app.config["REDIS_DB"] = redis_db
 app.config["SECRET_KEY"] = os.getenv("SECRET_KEY", os.urandom(32))
 app.config["SESSION_TYPE"] = "redis"
 app.config["SESSION_REDIS"] = redis_db
+app.config["STATIC_URL"] = os.getenv("STATIC_URL", "/static")
 Session(app)
 login_manager.init_app(app)
 
+@app.context_processor
+def inject_static_url():
+    return dict(static_url=app.config["STATIC_URL"])
 
 @login_manager.user_loader
 def load_user(user_id):

@@ -3,7 +3,33 @@
 {% block content %}
 <div class="row">
     <div class="col-12">
-        <h4>{{ system.name }} System</h4>
+        <div class="bannertron" style="background-image: url('{{ static_url }}/{{ system.banner }}');">
+            <div class="bannertron-overlay">
+                <div class="row">
+                    <div class="col-12">
+                        <h2>{{ system.name }} System</h2>
+                    </div>
+                    <div class="col-6">
+                        <ul class="list-unstyled">
+                            <li>Level: {{ system.level }}</li>
+                            <li>Spectral Class: {{ system.class }}</li>
+                            <li>Catalogue ID: {{ system.catalogue }}</li>
+                            <li>Temperature: {{ system.temperature }}</li>
+                            <li>Mass: {{ system.mass }}</li>
+                            <li>Radius: {{ system.radius }}</li>
+                        </ul>
+                    </div>
+                    <div class="col-6">
+                        <ul class="list-unstyled">
+                            <li>Magnitude: {{ system.magnitude }}</li>
+                            <li>Planet Count: {{ system.planet_count }}</li>
+                            <li>Moon Count: {{ system.moon_count }}</li>
+                            <li>Controlling Faction: {{ system.faction }}</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
         <hr>
     </div>
     {% for planet in planets %}

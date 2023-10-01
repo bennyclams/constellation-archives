@@ -6,7 +6,8 @@ class System(Model):
     _fields = [
         "id", "name", "catalogue_id", "class", "temperature", "mass",
         "radius", "magnitude", "planet_count", "moon_count",  "level",
-        "faction", "description", "submitter", "created_at", "updated_at"
+        "faction", "description", "banner", "submitter", "created_at",
+        "updated_at"
     ]
     _uniques = ["id", "name"]
 
