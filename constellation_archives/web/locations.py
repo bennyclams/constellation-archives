@@ -18,8 +18,8 @@ def systems():
 def system(system):
     data = {
         "system": System(name=system),
-        # "planets": Planet.by_system(system),
-        "planets": [],
+        "planets": Planet.by_system(system),
+        # "planets": [],
         "page": "systems"
     }
     return render_template("locations/system.html", **data)

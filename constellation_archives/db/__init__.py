@@ -36,7 +36,12 @@ class Model:
         if from_dict is not None:
             for field in self._fields:
                 if field in from_dict:
-                    self._data[field] = from_dict[field]
+                    if self._json_fields and field in self._json_fields:
+                        self._data[field] = json.loads(from_dict[field])
+                    elif self._dt_fields and field in self._dt_fields:
+                        self._data[field] = datetime.fromisoformat(from_dict[field])
+                    else:
+                        self._data[field] = from_dict[field]
         else:
             if self._cached:
                 redis_db = connect_redis()
