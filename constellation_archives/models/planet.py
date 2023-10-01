@@ -3,7 +3,11 @@ import json
 
 class Planet(Model):
     _table = "planets"
-    _fields = ["id", "name", "system", "level", "description", "submitter", "created_at", "updated_at"]
+    _fields = [
+        "id", "name", "system", "type", "gravity", "temperature", "atmosphere",
+        "magnetosphere", "fauna", "flora", "water", "resources", "traits", "moons",
+        "description", "submitter", "created_at", "updated_at"
+    ]
     _uniques = ["id", "name"]
     _json_fields = ["resources", "traits"]
 

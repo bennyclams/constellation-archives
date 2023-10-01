@@ -5,12 +5,12 @@
     <div class="col-md-12">
         <h3>New Planet</h3>
         <hr>
-        <form action="{{ url_for('locations.new_system') }}" method="post">
-            <div class="input-group">
+        <form action="{{ url_for('locations.new_planet') }}" method="post">
+            <div class="input-group mb-3">
                 <span class="input-group-text" for="name">Planet Name</span>
                 <input type="text" class="form-control" id="name" name="name" placeholder="System Name">
             </div>
-            <div class="input-group">
+            <div class="input-group mb-3">
                 <span class="input-group-text" for="system">System</span>
                 <select class="form-control" id="system" name="system">
                     {% for system in systems %}
@@ -52,15 +52,21 @@
             </div>
             <div class="input-group mb-3">
                 <span class="input-group-text" for="resources">Resources</span>
-                <input type="text" class="form-control" id="resources" name="resources" placeholder="Resources">
+                <select multiple class="form-control" id="resources" name="resources" multiple data-allow-new="true">
+                    <option selected disabled hidden value="">Add resources...</option>
+                </select>
             </div>
             <div class="input-group mb-3">
                 <span class="input-group-text" for="traits">Traits</span>
-                <input type="text" class="form-control" id="traits" name="traits" placeholder="Traits">
+                <select multiple class="form-control" id="traits" name="traits" multiple data-allow-new="true">
+                    <option selected disabled hidden value="">Add traits...</option>
+                </select>
             </div>
             <div class="input-group mb-3">
                 <span class="input-group-text" for="moons">Moons</span>
-                <input type="text" class="form-control" id="moons" name="moons" placeholder="Moons">
+                <select multiple class="form-control" id="moons" name="moons" multiple data-allow-new="true">
+                    <option selected disabled hidden value="">Add moons...</option>
+                </select>
             </div>
             <div class="form-group">
                 <label for="description">Planet Description</label>
@@ -76,5 +82,12 @@
 <script src="https://cdn.jsdelivr.net/simplemde/latest/simplemde.min.js"></script>
 <script>
     var simplemde = new SimpleMDE({ element: document.getElementById("description") });
+</script>
+<script src="https://cdn.jsdelivr.net/gh/lekoala/bootstrap5-tags@master/tags.js"></script>
+<script type="module">
+    import Tags from "https://cdn.jsdelivr.net/gh/lekoala/bootstrap5-tags@master/tags.js";
+    Tags.init("#resources");
+    Tags.init("#traits");
+    Tags.init("#moons");
 </script>
 {% endblock %}

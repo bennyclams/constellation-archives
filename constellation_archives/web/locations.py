@@ -73,7 +73,11 @@ def new_system():
 @app.route("/new/planet/", methods=["GET", "POST"])
 def new_planet():
     if request.method == "GET":
-        return render_template("locations/new_planet.html", page="new_planet")
+        data = {
+            "systems": System.all(),
+            "page": "new_planet"
+        }
+        return render_template("locations/new_planet.html", **data)
     elif request.method == "POST":
         data = {
             "name": request.form["name"],
@@ -86,18 +90,18 @@ def new_planet():
             "fauna": request.form["fauna"],
             "flora": request.form["flora"],
             "water": request.form["water"],
-            "resources": request.form["resources"],
-            "traits": request.form["traits"],
-            "moons": request.form["moons"],
+            "resources": request.form.getlist("resources"),
+            "traits": request.form.getlist("traits"),
+            "moons": request.form.getlist("moons"),
             "description": request.form["description"],
-            "submitter": current_user.username
+            "submitter": current_user['username']
         }
         try:
             planet = Planet(name=data["name"], system=data["system"])
             flash("Planet already exists.", "warning")
-            return redirect(url_for("locations.planet", system=planet.system, planet=planet.name))
+            return redirect(url_for("locations.planet", system=planet['system'], planet=planet['name']))
         except:
             pass
         planet = Planet.new(**data)
         flash("Planet created successfully.", "success")
-        return redirect(url_for("locations.planet", system=planet.system, planet=planet.name))
+        return redirect(url_for("locations.planet", system=planet['system'], planet=planet['name']))
