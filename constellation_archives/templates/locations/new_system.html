@@ -60,20 +60,13 @@
                 <input type="file" class="form-control" id="banner" name="banner">
                 <span class="input-group-text" for="banner" data-bs-toggle="tooltip" data-bs-placement="right" data-bs-title="Full-size screenshots work best">?</span>
             </div>
-            <div class="form-group">
-                <label for="description">System Description</label>
-                <textarea class="form-control" id="description" name="description" rows="3"></textarea>
-            </div>
             <button type="submit" class="btn btn-primary">Submit</button>
         </form>
     </div>
 </div>
 {% endblock %}
 {% block custom_scripts %}
-<link rel="stylesheet" href="https://cdn.rawgit.com/xcatliu/simplemde-theme-dark/master/dist/simplemde-theme-dark.min.css">
-<script src="https://cdn.jsdelivr.net/simplemde/latest/simplemde.min.js"></script>
 <script>
-    var simplemde = new SimpleMDE({ element: document.getElementById("description") });
     const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]')
     const tooltipList = [...tooltipTriggerList].map(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl))
 </script>

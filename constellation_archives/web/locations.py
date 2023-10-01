@@ -93,7 +93,7 @@ def new_planet():
             "resources": request.form.getlist("resources"),
             "traits": request.form.getlist("traits"),
             "moons": request.form.getlist("moons"),
-            "description": request.form["description"],
+            "description": "",
             "submitter": current_user['username']
         }
         try:
