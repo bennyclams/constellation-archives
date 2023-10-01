@@ -1,0 +1,37 @@
+{% extends 'base.html' %}
+{% block title %} - {{ system.name }} System{% endblock %}
+{% block content %}
+<div class="row">
+    <div class="col-12">
+        <h4>{{ system.name }} System</h4>
+        <hr>
+    </div>
+    {% for planet in planets %}
+    <div class="col-md-3 col-xs-12">
+        <div class="card">
+            <div class="card-header">
+                {{ planet.name }}
+            </div>
+            <div class="card-body">
+                <p class="card-text">{{ planet.description }}</p>
+                <ul class="list-unstyled">
+                    <li>Type: {{ planet.type }}</li>
+                    <li>Gravity: {{ planet.gravity }}</li>
+                    <li>Temperature: {{ planet.temperature }}</li>
+                    <li>Atmosphere: {{ planet.atmosphere }}</li>
+                    <li>Magnetosphere: {{ planet.magnetosphere }}</li>
+                </ul>
+                <ul class="list-unstyled">
+                    <li>Fauna: {{ planet.fauna }}</li>
+                    <li>Flora: {{ planet.flora }}</li>
+                    <li>Water: {{ planet.water }}</li>
+                    <li>Resources: {{ planet.resources }}</li>
+                    <li>Traits: {{ planet.traits }}</li>
+                </ul>
+                <a href="{{ url_for('systems_show', system_id=system.id) }}" class="stretched-link"></a>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+{% endblock %}

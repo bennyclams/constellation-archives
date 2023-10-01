@@ -1,0 +1,20 @@
+{% extends 'base.html' %}
+{% block title %} - Item Types{% endblock %}
+{% block content %}
+<div class="row">
+    <div class="col-12">
+        <h4>All Item Types</h4>
+        <hr>
+    </div>
+    {% for type in types %}
+    <div class="col-3">
+        <div class="card mb-3">
+            <div class="card-body">
+                <h5 class="card-title">{{ type.name }}</h5>
+                <a href="{{ url_for('items.item_type', item_type=type.name) }}" class="stretched-link"></a>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+{% endblock %}

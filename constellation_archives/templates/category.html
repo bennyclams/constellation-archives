@@ -1,0 +1,24 @@
+{% extends 'base.html' %}
+{% block title %} - {{ category.name }}{% endblock %}
+{% block content %}
+<div class="row">
+    <div class="col-12">
+        <h3>
+            {{ category.name }}
+            <small class="text-muted">- {{ category.description }}</small>
+        </h3>
+        <hr>
+    </div>
+    {% for item in items %}
+    <div class="col-3">
+        <div class="card mb-3">
+            <div class="card-body">
+                <h5 class="card-title">{{ item.name }}</h5>
+                <p class="card-text">{{ item.description }}</p>
+                <a href="{{ url_for('items.item', item_id=item.id) }}" class="stretched-link"></a>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+{% endblock %}

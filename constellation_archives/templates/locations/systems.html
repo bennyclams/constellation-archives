@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+{% block title %} - Systems{% endblock %}
+{% block content %}
+<div class="row">
+    <div class="col-12">
+        <h4>Systems</h4>
+        <hr>
+    </div>
+    {% for system in systems %}
+    <div class="col-md-4 col-xs-12">
+        <div class="card">
+            <div class="card-header">
+                {{ system.name }} - <span class="text-muted">Level {{ system.level }} system with {{ system.planets }} planets</span>
+            </div>
+            <div class="card-body">
+                <p class="card-text">{{ system.description }}</p>
+                <a href="{{ url_for('systems_show', system_id=system.id) }}" class="stretched-link"></a>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+{% endblock %}

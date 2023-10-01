@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+{% block title %} - {{ item.name }}{% endblock %}
+{% block content %}
+<div class="row">
+    <div class="col-2">
+        <!-- <img src="{{ item.image }}" class="img-fluid" alt="{{ item.name }}"> -->
+        <h4>Categories</h4>
+        <ul>
+            {% for category in item.categories %}
+            <li><a class="text-muted" href="{{ url_for('items.category', category_name=category) }}">{{ category }}</a></li>
+            {% endfor %}
+        </ul>
+    </div>
+    <div class="col-10">
+        <h3>
+            {{ item.name }}
+            <small class="text-muted">{{ item.type }}</small>
+        </h3>
+        <p>{{ item.description | safe }}</p>
+        <small class="text-muted">Added {{ item.created_at.strftime('%B %d, %Y') }} by {{ item.submitter }}</small>
+    </div>
+</div>
+{% endblock %}
