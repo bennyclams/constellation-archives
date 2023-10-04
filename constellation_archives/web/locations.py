@@ -131,9 +131,11 @@ def edit_system(system_name):
             if field == "submitter":
                 continue
             if field in system:
-                data[field] = request.form[field]
+                if request.form[field] != system[field]:
+                    data[field] = request.form[field]
         if request.files["banner"].filename != "":
             data["banner"] = upload_file_to_s3(request.files["banner"])
         system.update(**data)
+        print(data)
         flash("System updated successfully.", "success")
         return redirect(url_for("locations.system", system=system['name']))

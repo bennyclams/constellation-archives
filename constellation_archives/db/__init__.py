@@ -160,6 +160,25 @@ class Model:
             else:
                 raise AttributeError("No such attribute: %s" % field)
         sql += ", ".join(_ands)
+        sql += " WHERE "
+        _ands = []
+        for field in self._uniques:
+            if field in self._data:
+                _ands.append(field + " = %s")
+                if field in self._json_fields:
+                    _vals.append(json.dumps(self._data[field]))
+                else:
+                    _vals.append(self._data[field])
+            else:
+                raise AttributeError("No such attribute: %s" % field)
+        sql += " AND ".join(_ands)
+        conn, cursor = connect()
+        cursor.execute(sql, tuple(_vals))
+        close(conn, cursor)
+        for field in kwargs:
+            if field in self._fields:
+                self._data[field] = kwargs[field]
+
 
     @classmethod
     def count(cls, **kwargs):

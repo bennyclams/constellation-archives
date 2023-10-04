@@ -1,0 +1,6 @@
+flask
+flask-login
+flask-session
+markdown2
+redis
+mysql-connector-python
