@@ -1,0 +1,74 @@
+{% extends 'base.html' %}
+{% block title %} - Edit {{ system.name }} System{% endblock %}
+{% block content %}
+<div class="row">
+    <div class="col-md-12">
+        <h3>Edit {{ system.name }} System</h3>
+        <hr>
+        <form action="{{ url_for('locations.edit_system', system_name=system.name) }}" enctype="multipart/form-data" method="post">
+            <input type="hidden" name="name" value="{{ system.name }}">
+            <div class="input-group mb-3">
+                <span class="input-group-text" for="name">System Name</span>
+                <input type="text" class="form-control disabled" placeholder="System Name" value="{{ system.name }}" disabled>
+            </div>
+            <div class="input-group mb-3">
+                <span class="input-group-text" for="name">System Level</span>
+                <input type="number" class="form-control" id="level" name="level" placeholder="System Level" value="{{ system.level }}">
+            </div>
+            <div class="input-group mb-3">
+                <span class="input-group-text" for="class">Spectral Class</span>
+                <input type="text" class="form-control" id="class" name="class" placeholder="Spectral Class" value="{{ system.class }}">
+            </div>
+            <div class="input-group mb-3">
+                <span class="input-group-text" for="catalogue">Catalogue ID</span>
+                <input type="text" class="form-control" id="catalogue" name="catalogue_id" placeholder="Catalogue ID" value="{{ system.catalogue_id }}">
+            </div>
+            <div class="input-group mb-3">
+                <span class="input-group-text" for="temperature">Temperature</span>
+                <input type="text" class="form-control" id="temperature" name="temperature" placeholder="Temperature" value="{{ system.temperature }}">
+            </div>
+            <div class="input-group mb-3">
+                <span class="input-group-text" for="mass">Mass</span>
+                <input type="text" class="form-control" id="mass" name="mass" placeholder="Mass" value="{{ system.mass }}">
+            </div>
+            <div class="input-group mb-3">
+                <span class="input-group-text" for="radius">Radius</span>
+                <input type="text" class="form-control" id="radius" name="radius" placeholder="Radius" value="{{ system.radius }}">
+            </div>
+            <div class="input-group mb-3">
+                <span class="input-group-text" for="magnitude">Magnitude</span>
+                <input type="text" class="form-control" id="magnitude" name="magnitude" placeholder="Magnitude" value="{{ system.magnitude }}">
+            </div>
+            <div class="input-group mb-3">
+                <span class="input-group-text" for="planets">Planet Count</span>
+                <input type="number" class="form-control" id="planets" name="planets" placeholder="Planet Count" value="{{ system.planet_count }}">
+            </div>
+            <div class="input-group mb-3">
+                <span class="input-group-text" for="moons">Moon Count</span>
+                <input type="number" class="form-control" id="moons" name="moons" placeholder="Moon Count" value="{{ system.moon_count }}">
+            </div>
+            <div class="input-group mb-3">
+                <span class="input-group-text" for="controlling_faction">Controlling Faction</span>
+                <select class="form-control" id="controlling_faction" name="faction">
+                    <option value="None" {% if system.faction == 'None' %}selected{% endif %}>None</option>
+                    <option value="Freestar Collective" {% if system.faction == 'Freestar Collective' %}selected{% endif %}>Freestar Collective</option>
+                    <option value="United Colonies" {% if system.faction == 'United Colonies' %}selected{% endif %}>United Colonies</option>
+                    <option value="Crimson Fleet" {% if system.faction == 'Crimson Fleet' %}selected{% endif %}>Crimson Fleet</option>
+                </select>
+            </div>
+            <div class="input-group mb-3">
+                <span class="input-group-text" for="banner">Banner Image</span>
+                <input type="file" class="form-control" id="banner" name="banner">
+                <span class="input-group-text" for="banner" data-bs-toggle="tooltip" data-bs-placement="right" data-bs-title="Full-size screenshots work best">?</span>
+            </div>
+            <button type="submit" class="btn btn-primary">Save</button>
+        </form>
+    </div>
+</div>
+{% endblock %}
+{% block custom_scripts %}
+<script>
+    const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]')
+    const tooltipList = [...tooltipTriggerList].map(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl))
+</script>
+{% endblock %}

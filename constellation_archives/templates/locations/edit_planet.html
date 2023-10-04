@@ -1,0 +1,103 @@
+{% extends 'base.html' %}
+{% block title %} - Edit Planet{% endblock %}
+{% block content %}
+<div class="row">
+    <div class="col-md-12">
+        <h3>Edit Planet</h3>
+        <hr>
+        <form action="{{ url_for('locations.edit_planet') }}" method="post">
+            <div class="input-group mb-3">
+                <span class="input-group-text" for="name">Planet Name</span>
+                <input type="text" class="form-control" id="name" name="name" placeholder="System Name">
+            </div>
+            <div class="input-group mb-3">
+                <span class="input-group-text" for="system">System</span>
+                <select class="form-control" id="system" name="system">
+                    {% for system in systems %}
+                    {% if system.name == planet.system %}
+                    <option value="{{ system.name }}" selected>{{ system.name }}</option>
+                    {% else %}
+                    <option value="{{ system.name }}">{{ system.name }}</option>
+                    {% endif %}
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="input-group mb-3">
+                <span class="input-group-text" for="type">Planet Type</span>
+                <input type="text" class="form-control" id="type" name="type" placeholder="Planet Type" value="{{ planet.type }}">
+            </div>
+            <div class="input-group mb-3">
+                <span class="input-group-text" for="gravity">Gravity</span>
+                <input type="text" class="form-control" id="gravity" name="gravity" placeholder="Gravity" value="{{ planet.gravity }}">
+            </div>
+            <div class="input-group mb-3">
+                <span class="input-group-text" for="temperature">Temperature</span>
+                <input type="text" class="form-control" id="temperature" name="temperature" placeholder="Temperature" value="{{ planet.temperature }}">
+            </div>
+            <div class="input-group mb-3">
+                <span class="input-group-text" for="atmosphere">Atmosphere</span>
+                <input type="text" class="form-control" id="atmosphere" name="atmosphere" placeholder="Atmosphere" value="{{ planet.atmosphere }}">
+            </div>
+            <div class="input-group mb-3">
+                <span class="input-group-text" for="magnetosphere">Magnetosphere</span>
+                <input type="text" class="form-control" id="magnetosphere" name="magnetosphere" placeholder="Magnetosphere" value="{{ planet.magnetosphere }}">
+            </div>
+            <div class="input-group mb-3">
+                <span class="input-group-text" for="fauna">Fauna</span>
+                <input type="number" class="form-control" id="fauna" name="fauna" placeholder="Fauna" value="{{ planet.fauna }}">
+            </div>
+            <div class="input-group mb-3">
+                <span class="input-group-text" for="flora">Flora</span>
+                <input type="number" class="form-control" id="flora" name="flora" placeholder="Flora" value="{{ planet.flora }}">
+            </div>
+            <div class="input-group mb-3">
+                <span class="input-group-text" for="water">Water</span>
+                <input type="text" class="form-control" id="water" name="water" placeholder="Water" value="{{ planet.water }}">
+            </div>
+            <div class="input-group mb-3">
+                <span class="input-group-text" for="resources">Resources</span>
+                <select multiple class="form-control" id="resources" name="resources" multiple data-allow-new="true">
+                    {% for resource in planet.resources %}
+                    <option value="{{ resource }}" selected>{{ resource }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="input-group mb-3">
+                <span class="input-group-text" for="traits">Traits</span>
+                <select multiple class="form-control" id="traits" name="traits" multiple data-allow-new="true">
+                    {% for trait in planet.traits %}
+                    <option value="{{ trait }}" selected>{{ trait }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="input-group mb-3">
+                <span class="input-group-text" for="moons">Moons</span>
+                <select multiple class="form-control" id="moons" name="moons" multiple data-allow-new="true">
+                    {% for moon in planet.moons %}
+                    <option value="{{ moon }}" selected>{{ moon }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="description">Planet Description</label>
+                <textarea class="form-control" id="description" name="description" rows="3">{{ planet.description }}</textarea>
+            </div>
+            <button type="submit" class="btn btn-primary">Submit</button>
+        </form>
+    </div>
+</div>
+{% endblock %}
+{% block custom_scripts %}
+<link rel="stylesheet" href="https://cdn.rawgit.com/xcatliu/simplemde-theme-dark/master/dist/simplemde-theme-dark.min.css">
+<script src="https://cdn.jsdelivr.net/simplemde/latest/simplemde.min.js"></script>
+<script>
+    var simplemde = new SimpleMDE({ element: document.getElementById("description") });
+</script>
+<script src="https://cdn.jsdelivr.net/gh/lekoala/bootstrap5-tags@master/tags.js"></script>
+<script type="module">
+    import Tags from "https://cdn.jsdelivr.net/gh/lekoala/bootstrap5-tags@master/tags.js";
+    Tags.init("#resources");
+    Tags.init("#traits");
+    Tags.init("#moons");
+</script>
+{% endblock %}

@@ -105,3 +105,35 @@ def new_planet():
         planet = Planet.new(**data)
         flash("Planet created successfully.", "success")
         return redirect(url_for("locations.planet", system=planet['system'], planet=planet['name']))
+    
+@app.route("/edit/system/<system_name>/", methods=["GET", "POST"])
+def edit_system(system_name):
+    if request.method == "GET":
+        try:
+            system = System(name=system_name)
+        except:
+            flash("System '%s' does not exist." % system_name, "warning")
+            return redirect(url_for("locations.systems"))
+        data = {
+            "system": system,
+            "page": "edit_system"
+        }
+        return render_template("locations/edit_system.html", **data)
+    elif request.method == "POST":
+        system_name = request.form["name"]
+        try:
+            system = System(name=system_name)
+        except:
+            flash("System '%s' does not exist." % system_name, "warning")
+            return redirect(url_for("locations.systems"))
+        data = {}
+        for field in request.form:
+            if field == "submitter":
+                continue
+            if field in system:
+                data[field] = request.form[field]
+        if request.files["banner"].filename != "":
+            data["banner"] = upload_file_to_s3(request.files["banner"])
+        system.update(**data)
+        flash("System updated successfully.", "success")
+        return redirect(url_for("locations.system", system=system['name']))

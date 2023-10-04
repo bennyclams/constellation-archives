@@ -105,6 +105,9 @@ class Model:
     def __delitem__(self, name):
         raise Exception("Cannot delete attributes from Model objects")
 
+    def __contains__(self, name):
+        return name in self._fields
+
     def __repr__(self):
         return "<Model %s>" % self._table
     
@@ -145,6 +148,18 @@ class Model:
                 for keyname in keynames:
                     redis_db.delete(basename + str(keyname))
             # if no uniques, we won't cache it
+
+    def update(self, **kwargs):
+        sql = "UPDATE " + self._table + " SET "
+        _ands = []
+        _vals = []
+        for field in kwargs:
+            if field in self._fields:
+                _ands.append(field + " = %s")
+                _vals.append(kwargs[field])
+            else:
+                raise AttributeError("No such attribute: %s" % field)
+        sql += ", ".join(_ands)
 
     @classmethod
     def count(cls, **kwargs):
