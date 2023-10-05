@@ -10,6 +10,7 @@ class System(Model):
         "updated_at"
     ]
     _uniques = ["id", "name"]
+    _cached = True
 
     def __repr__(self):
         return "<System %s>" % self['name']

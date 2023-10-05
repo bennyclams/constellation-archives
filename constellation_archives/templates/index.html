@@ -1,10 +1,29 @@
 {% extends 'base.html' %}
 {% block content %}
 <div class="row">
-  <div class="col-md-6 offset-md-3 mt-3">
-    <h1>Constellation Archives</h1>
-    <p class="lead">Welcome to the Constellation Archives! The goal of this project is to be growing archive of knowledge about Starfield and its lore, readables, audio logs, items and more. 
-        Anyone is allowed to sign up and contribute as long as the information added is accurate.</p>
-  </div>
+    {% if settings.banner_enabled == 1 %}
+    <div class="col-12 mt-3">
+        <div class="alert alert-{{ settings.banner_type }}" role="alert">
+            {{ settings.banner_text | markdown }}
+        </div>
+    </div>
+    {% endif %}
+    <div class="col-md-9 mt-3">
+        {{ settings.main_text | markdown }}
+    </div>
+    <div class="col-md-3 mt-3">
+        <div class="card mb-3">
+            <div class="card-header">
+                Latest Additions
+            </div>
+            <ul class="list-group list-group-flush">
+                {% for i in latest %}
+                    <li class="list-group-item">
+                    <a {% if i.type == 'item' %} href="{{ url_for('items.item', item_id=i.id) }}" {% elif i.type == 'item_type' %} href="{{ url_for('items.item_type', item_type=i.name) }}" {% elif i.type == 'category' %} href="{{ url_for('items.category', category_name=i.name) }}" {% elif i.type == 'system' %} href="{{ url_for('locations.system', system=i.name) }}" {% elif i.type == 'planet' %} href="{{ url_for('locations.planet', planet_name=i.name) }}" {% endif %} >{{ i.name }}</a> added on {{ i.created_at.strftime('%B %d, %Y') }} by {{ i.submitter }}
+                    </li>
+                {% endfor %}
+            </ul>
+        </div>
+    </div>
 </div>
 {% endblock %}

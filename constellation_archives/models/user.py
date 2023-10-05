@@ -4,7 +4,8 @@ from werkzeug.security import generate_password_hash, check_password_hash
 
 class User(Model):
     _table = "users"
-    _fields = ["id", "username", "password", "email", "roles", "created_at", "updated_at"]
+    _fields = ["id", "username", "password", "email", "roles", "created_at", "updated_at", "last_login"]
+    _dt_fields = ["created_at", "updated_at", "last_login"]
     _uniques = ["id", "username", "email"]
     _json_fields = ["roles"]
 
@@ -48,6 +49,11 @@ class User(Model):
     
     def __str__(self):
         return "<User %s>" % self['username']
+    
+    def __eq__(self, other):
+        if isinstance(other, User):
+            return self['id'] == other['id']
+        return False
     
     @classmethod
     def new(cls, **kwargs):

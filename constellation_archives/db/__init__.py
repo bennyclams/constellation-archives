@@ -36,7 +36,7 @@ class Model:
         if from_dict is not None:
             for field in self._fields:
                 if field in from_dict:
-                    if self._json_fields and field in self._json_fields:
+                    if self._json_fields and field in self._json_fields and isinstance(from_dict[field], str):
                         self._data[field] = json.loads(from_dict[field])
                     else:
                         self._data[field] = from_dict[field]
@@ -46,7 +46,7 @@ class Model:
                 keyname = "CACache:%s:" % self._table
                 for field in kwargs:
                     if field in self._uniques:
-                        keyname += kwargs[field]
+                        keyname += str(kwargs[field])
                         if redis_db.exists(keyname):
                             self._data = json.loads(redis_db.get(keyname))
                             if self._dt_fields is not None:
@@ -85,8 +85,13 @@ class Model:
         if name in self._fields:
             if name not in self._uniques:
                 self._data[name] = value
-                if name in self._json_fields:
-                    self._data[name] = json.dumps(value)
+                if self._json_fields is not None:
+                    if name in self._json_fields:
+                        value = json.dumps(value)
+                if self._dt_fields is not None:
+                    if name in self._dt_fields:
+                        if isinstance(value, datetime):
+                            value = value.isoformat()
                 conn, cursor = connect()
                 if "updated_at" in self._fields:
                     sql = "UPDATE " + self._table + " SET " + name + " = %s, updated_at = NOW() WHERE "
@@ -97,7 +102,7 @@ class Model:
                 for field in self._uniques:
                     _ands.append(field + " = %s")
                     _vals.append(self._data[field])
-                sql += " AND ".join(_ands, tuple(_vals))
+                sql += " AND ".join(_ands)
                 cursor.execute(sql, tuple(_vals))
                 close(conn, cursor)
                 self.__bust_cache()
@@ -149,6 +154,22 @@ class Model:
                     redis_db.delete(basename + str(keyname))
             # if no uniques, we won't cache it
 
+    def delete(self):
+        sql = "DELETE FROM " + self._table + " WHERE "
+        _ands = []
+        _vals = []
+        for field in self._uniques:
+            if field in self._data:
+                _ands.append(field + " = %s")
+                _vals.append(self._data[field])
+            else:
+                raise AttributeError("No such attribute: %s" % field)
+        sql += " AND ".join(_ands)
+        conn, cursor = connect()
+        cursor.execute(sql, tuple(_vals))
+        close(conn, cursor)
+        self.__bust_cache()
+
     def update(self, **kwargs):
         sql = "UPDATE " + self._table + " SET "
         _ands = []
@@ -156,7 +177,10 @@ class Model:
         for field in kwargs:
             if field in self._fields:
                 _ands.append(field + " = %s")
-                _vals.append(kwargs[field])
+                if field in self._json_fields:
+                    _vals.append(json.dumps(kwargs[field]))
+                else:
+                    _vals.append(kwargs[field])
             else:
                 raise AttributeError("No such attribute: %s" % field)
         sql += ", ".join(_ands)
@@ -165,10 +189,7 @@ class Model:
         for field in self._uniques:
             if field in self._data:
                 _ands.append(field + " = %s")
-                if field in self._json_fields:
-                    _vals.append(json.dumps(self._data[field]))
-                else:
-                    _vals.append(self._data[field])
+                _vals.append(self._data[field])
             else:
                 raise AttributeError("No such attribute: %s" % field)
         sql += " AND ".join(_ands)
@@ -178,11 +199,19 @@ class Model:
         for field in kwargs:
             if field in self._fields:
                 self._data[field] = kwargs[field]
-
+        self.__bust_cache()
 
     @classmethod
     def count(cls, **kwargs):
-        sql = "SELECT COUNT(*) FROM " + cls._table + " WHERE "
+        sql = "SELECT COUNT(*) FROM " + cls._table
+        if len(kwargs) > 0:
+            sql += " WHERE "
+        else:
+            conn, cursor = connect()
+            cursor.execute(sql)
+            row = cursor.fetchone()
+            close(conn, cursor)
+            return list(row.values())[0]
         _ands = []
         _vals = []
         for field in kwargs:
@@ -243,4 +272,48 @@ class Model:
         close(conn, cursor)
         if "id" in cls._fields:
             kwargs["id"] = row_id
+        if "created_at" in cls._fields:
+            kwargs["created_at"] = datetime.now().isoformat()
+        if "updated_at" in cls._fields:
+            kwargs["updated_at"] = datetime.now().isoformat()
         return cls(from_dict=kwargs)
+
+
+class RedisList:
+    _key = None
+    _max_length = None
+    _json_items = False
+
+    def __init__(self):
+        self._redis = connect_redis()
+
+    def __len__(self):
+        return self._redis.llen(self._key)
+    
+    def __getitem__(self, index):
+        return self._redis.lindex(self._key, index)
+    
+    def __setitem__(self, index, value):
+        self._redis.lset(self._key, index, value)
+
+    def __delitem__(self, index):
+        self._redis.lset(self._key, index, "")
+    
+    def __iter__(self):
+        return self._redis.lrange(self._key, 0, -1).__iter__()
+    
+    def all(self):
+        if self._json_items:
+            return [json.loads(item) for item in self._redis.lrange(self._key, 0, -1)]
+        return self._redis.lrange(self._key, 0, -1)
+
+    def push(self, value):
+        if isinstance(value, dict) or isinstance(value, list):
+            value = json.dumps(value)
+        self._redis.rpush(self._key, value)
+        if self._max_length is not None:
+            if len(self) > self._max_length:
+                self.pop()
+
+    def pop(self):
+        return self._redis.lpop(self._key)

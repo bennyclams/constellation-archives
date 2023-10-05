@@ -1,0 +1,41 @@
+{% extends 'admin/base.html' %}
+{% block admin_title %} - Edit {{ user.username }}{% endblock %}
+{% block admin_content %}
+<div class="card">
+    <div class="card-header">
+        Edit {{ user.username }}
+    </div>
+    <div class="card-body">
+        <form action="{{ url_for('admin.edit_user', user_id=user.id) }}" method="post">
+            <div class="input-group mb-3">
+                <span class="input-group-text" for="username">Username</span>
+                <input type="text" class="form-control" id="username"
+                    name="username" value="{{ user.username }}" disabled>
+            </div>
+            <div class="input-group mb-3">
+                <span class="input-group-text" for="email">Email</span>
+                <input type="text" class="form-control" id="email"
+                    name="email" value="{{ user.email }}" disabled>
+            </div>
+            <div class="input-group mb-3">
+                <span class="input-group-text" for="roles">Roles</span>
+                <select class="form-select" id="roles" name="roles" multiple data-allow-new="true">
+                    <option selected disabled hidden value="">Add roles...</option>
+                    {% for role in user.roles %}
+                    <option value="{{ role }}" selected>{{ role }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <button type="submit" class="btn btn-primary float-end">Save</button>
+            <a href="{{ url_for('admin.users') }}" class="btn btn-secondary">Cancel</a>
+        </form>
+    </div>
+</div>
+{% endblock %}
+{% block custom_scripts %}
+<script src="https://cdn.jsdelivr.net/gh/lekoala/bootstrap5-tags@master/tags.js"></script>
+<script type="module">
+    import Tags from "https://cdn.jsdelivr.net/gh/lekoala/bootstrap5-tags@master/tags.js";
+    Tags.init("#roles");
+</script>
+{% endblock %}

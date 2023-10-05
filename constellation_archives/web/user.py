@@ -1,6 +1,7 @@
 from flask import Blueprint, render_template, request, redirect, url_for, flash
 from flask_login import login_required, current_user, login_user, logout_user
 from constellation_archives.models.user import User
+from datetime import datetime
 
 app = Blueprint("users", __name__)
 
@@ -27,6 +28,7 @@ def login():
         else:
             flash("Logged in successfully", "success")
             login_user(user)
+            user["last_login"] = datetime.now().isoformat()
             return redirect(url_for("index"))
 
     return render_template("login.html")

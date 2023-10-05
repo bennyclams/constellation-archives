@@ -22,7 +22,11 @@
         </h4>
         <hr>
         <p>{{ planet.description }}</p>
+        <p><a class="float-end" href="{{ url_for('locations.edit_planet', planet_name=planet.name) }}">Edit</a></p>
         <small class="text-muted">Added on {{ planet.created_at.strftime('%B %d, %Y') }} by {{ planet.submitter }}</small>
+        {% if planet.updated_at != planet.created_at %}
+        <small class="text-muted">, Last updated on {{ planet.updated_at.strftime('%B %d, %Y') }}</small>
+        {% endif %}
     </div>
 </div>
 {% endblock %}

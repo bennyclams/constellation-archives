@@ -47,6 +47,22 @@
       -moz-transition: opacity .55s ease-in-out;
       -webkit-transition: opacity .55s ease-in-out;
     }
+    .list-group-flush a {
+      text-decoration: none;
+      color: var(--bs-text-dark);
+    }
+    .list-group-flush a:hover {
+      text-decoration: none;
+      color: var(--bs-secondary);
+    }
+    .list-group-flush .list-group-item.active {
+      background-color: var(--bs-dark-bg-subtle);
+      border-color: var(--bs-border-color);
+      color: var(--bs-light);
+    }
+    .alert > p {
+      margin-bottom: 0;
+    }
   </style>
 </head>
 
@@ -103,6 +119,11 @@
                     <li><a class="dropdown-item {% if page == 'new_unique' %}active{% endif %}" href="#">Unique</a></li>
                     <li><a class="dropdown-item {% if page == 'new_poi' %}active{% endif %}" href="#">POI</a></li>
                   </ul>
+                </li>
+                {% endif %}
+                {% if current_user.is_authenticated and current_user.has_role('admin') %}
+                <li class="nav-item">
+                  <a class="nav-link {% if page in ['admin_index', 'admin_users'] %}active{% endif %}" href="{{ url_for('admin.index') }}">Admin</a>
                 </li>
                 {% endif %}
               </ul>

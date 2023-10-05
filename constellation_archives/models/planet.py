@@ -9,7 +9,9 @@ class Planet(Model):
         "description", "submitter", "created_at", "updated_at"
     ]
     _uniques = ["id", "name"]
+    _dt_fields = ["created_at", "updated_at"]
     _json_fields = ["resources", "traits", "moons"]
+    _cached = True
 
     def __repr__(self):
         return "<Planet %s>" % self['name']

@@ -7,7 +7,9 @@
             <div class="bannertron-overlay">
                 <div class="row">
                     <div class="col-12">
-                        <h2>{{ system.name }} System</h2>
+                        <h2>
+                            {{ system.name }} System
+                        </h2>
                     </div>
                     <div class="col-6">
                         <ul class="list-unstyled">
@@ -26,6 +28,9 @@
                             <li>Moon Count: {{ system.moon_count }}</li>
                             <li>Controlling Faction: {{ system.faction }}</li>
                         </ul>
+                    </div>
+                    <div class="col-12">
+                        <a href="{{ url_for('locations.edit_system', system_name=system.name) }}">Edit</a>
                     </div>
                 </div>
             </div>

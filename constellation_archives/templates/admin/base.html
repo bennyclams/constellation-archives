@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+{% block title %} - Admin{% block admin_title %}{% endblock %}{% endblock %}
+{% block content %}
+<div class="row">
+    <div class="col-2">
+        <div class="card">
+            <div class="card-header">
+                Admin
+            </div>
+            <ul class="list-group list-group-flush">
+                <li class="list-group-item {% if page == 'admin_index' %}active{% endif %}">
+                    <a href="{{ url_for('admin.index') }}">Home Page Settings</a>
+                </li>
+                <li class="list-group-item {% if page == 'admin_users' %}active{% endif %}">
+                    <a href="{{ url_for('admin.users') }}">Users</a>
+                </li>
+                <li class="list-group-item {% if page == 'admin_moderation' %}active{% endif %}">
+                    <a href="#">Moderation</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+    <div class="col-10">
+        {% block admin_content %}{% endblock %}
+    </div>
+</div>
+{% endblock %}

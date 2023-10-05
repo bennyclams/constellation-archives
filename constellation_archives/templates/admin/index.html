@@ -1,0 +1,59 @@
+{% extends 'admin/base.html' %}
+{% block admin_content %}
+<div class="card">
+    <div class="card-header">
+        Home Page Settings
+    </div>
+    <div class="card-body">
+        <form action="{{ url_for('admin.index') }}" method="post">
+            <div class="form-group mb-3">
+                <h5 for="home_page_text">Home Page Text</h5>
+                <textarea class="form-control" id="main_text" name="main_text" rows="3">{{ settings.main_text }}</textarea>
+            </div>
+            <div class="input-group mb-3">
+                <span class="input-group-text" for="banner_enabled">Banner Enabled</span>
+                <div class="input-group-text">
+                    <input type="checkbox" class="form-check-input" id="banner_enabled" name="banner_enabled" {% if settings.banner_enabled %}checked{% endif %}>
+                </div>
+            </div>
+            <div id="banner_options" class="d-none">
+                <div class="form-group mb-3">
+                    <h5 for="banner_text">Banner Text</h5>
+                    <textarea class="form-control" id="banner_text" name="banner_text" rows="3">{{ settings.banner_text }}</textarea>
+                </div>
+                <div class="input-group mb-3">
+                    <span class="input-group-text" for="banner_type">Banner Type</span>
+                    <select class="form-select" id="banner_type" name="banner_type">
+                        <option value="info" {% if settings.banner_type == 'info' %}selected{% endif %}>Info</option>
+                        <option value="danger" {% if settings.banner_type == 'danger' %}selected{% endif %}>Danger</option>
+                        <option value="warning" {% if settings.banner_type == 'warning' %}selected{% endif %}>Warning</option>
+                        <option value="success" {% if settings.banner_type == 'success' %}selected{% endif %}>Success</option>
+                    </select>
+                </div>
+            </div>
+            <button type="submit" class="btn btn-primary float-end">Save</button>
+        </form>
+    </div>
+</div>
+{% endblock %}
+{% block custom_scripts %}
+<link rel="stylesheet" href="https://cdn.rawgit.com/xcatliu/simplemde-theme-dark/master/dist/simplemde-theme-dark.min.css">
+<script src="https://cdn.jsdelivr.net/simplemde/latest/simplemde.min.js"></script>
+<script>
+    var mainmde = new SimpleMDE({ element: document.getElementById("main_text") });
+    var bannermde = new SimpleMDE({ element: document.getElementById("banner_text") });
+    var banner_enabled = document.getElementById("banner_enabled");
+    banner_enabled.addEventListener('change', function() {
+        if (this.checked) {
+            document.getElementById("banner_options").classList.remove("d-none");
+        } else {
+            document.getElementById("banner_options").classList.add("d-none");
+        }
+    });
+    if (banner_enabled.checked) {
+        document.getElementById("banner_options").classList.remove("d-none");
+    } else {
+        document.getElementById("banner_options").classList.add("d-none");
+    }
+</script>
+{% endblock %}
