@@ -9,19 +9,16 @@ app = Blueprint("admin", __name__)
 @app.route("/", methods=["GET", "POST"])
 @login_required
 def index():
+    if not current_user.has_role("admin"):
+        flash("You do not have permission to view this page.", "danger")
+        return redirect(url_for("index"))
     if request.method == "GET":
-        if not current_user.has_role("admin"):
-            flash("You do not have permission to view this page.", "error")
-            return redirect(url_for("index"))
         data = {
             "settings": IndexSettings(id=1),
             "page": "admin_index",
         }
         return render_template("admin/index.html", **data)
     elif request.method == "POST":
-        if not current_user.has_role("admin"):
-            flash("You do not have permission to view this page.", "error")
-            return redirect(url_for("index"))
         settings = IndexSettings(id=1)
         settings["main_text"] = request.form["main_text"]
         banner_enabled = request.form.get("banner_enabled", False)

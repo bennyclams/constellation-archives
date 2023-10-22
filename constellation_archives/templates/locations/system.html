@@ -45,7 +45,13 @@
             </div>
             <div class="card-body">
                 <p class="card-text">{{ planet.description }}</p>
-                <p class="card-text">{{ planet.resources|join(', ') }}</p>
+                <p class="card-text">
+                    Resources:
+                    <br>
+                    {% for resource in planet.resources %}
+                    <span class="badge bg-primary">{{ resource }}</span>
+                    {% endfor %}
+                </p>
                 <a href="{{ url_for('locations.planet', system=system.name, planet=planet.name) }}" class="stretched-link"></a>
             </div>
         </div>

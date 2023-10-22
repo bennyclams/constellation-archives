@@ -38,6 +38,8 @@ class Model:
                 if field in from_dict:
                     if self._json_fields and field in self._json_fields and isinstance(from_dict[field], str):
                         self._data[field] = json.loads(from_dict[field])
+                    elif self._json_fields and field in self._json_fields and isinstance(from_dict[field], bytes):
+                        self._data[field] = json.loads(from_dict[field].decode("utf-8"))
                     else:
                         self._data[field] = from_dict[field]
         else:
